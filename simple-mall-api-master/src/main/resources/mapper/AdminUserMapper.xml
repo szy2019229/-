@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="gkd.simple.mall.dao.AdminUserMapper">
+  <resultMap id="BaseResultMap" type="gkd.simple.mall.entity.AdminUser">
+    <id column="admin_user_id" jdbcType="BIGINT" property="adminUserId" />
+    <result column="login_user_name" jdbcType="VARCHAR" property="loginName" />
+    <result column="login_password" jdbcType="VARCHAR" property="passwordMd5" />
+    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
+    <result column="locked" jdbcType="TINYINT" property="lockedFlag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    admin_user_id, login_user_name, login_password, nick_name, locked
+  </sql>
+
+  <select id="login" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_simple_mall_admin_user
+    where login_user_name = #{loginName,jdbcType=VARCHAR} AND login_password=#{passwordMd5,jdbcType=VARCHAR} AND locked = 0
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_simple_mall_admin_user
+    where admin_user_id = #{adminUserId,jdbcType=BIGINT}
+  </select>
+  <insert id="insert" parameterType="gkd.simple.mall.entity.AdminUser">
+    insert into tb_simple_mall_admin_user (admin_user_id, login_user_name, login_password,
+      nick_name, locked)
+    values (#{adminUserId,jdbcType=BIGINT}, #{loginName,jdbcType=VARCHAR}, #{passwordMd5,jdbcType=VARCHAR},
+      #{nickName,jdbcType=VARCHAR}, #{lockedFlag,jdbcType=TINYINT})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="gkd.simple.mall.entity.AdminUser">
+    update tb_simple_mall_admin_user
+    <set>
+      <if test="loginName != null">
+        login_user_name = #{loginName,jdbcType=VARCHAR},
+      </if>
+      <if test="passwordMd5 != null">
+        login_password = #{passwordMd5,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null">
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="lockedFlag != null">
+        locked = #{lockedFlag,jdbcType=TINYINT},
+      </if>
+    </set>
+    where admin_user_id = #{adminUserId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="gkd.simple.mall.entity.AdminUser">
+    update tb_simple_mall_admin_user
+    set login_user_name = #{loginName,jdbcType=VARCHAR},
+      login_password = #{passwordMd5,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      locked = #{lockedFlag,jdbcType=TINYINT}
+    where admin_user_id = #{adminUserId,jdbcType=BIGINT}
+  </update>
+</mapper>
